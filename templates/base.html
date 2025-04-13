@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <title>{% block title %}RiffMates{% endblock %}</title>
+  </head>
+  <body class="bg-gray-100 text-gray-900">
+    <div class="min-h-screen">
+      {% block nav %}
+      <nav class="bg-white shadow p-4 mb-4">
+        <div class="container mx-auto flex justify-between items-center">
+          <h1 class="text-xl font-semibold">RiffMates</h1>
+          <div>
+            <a href="{% url 'news' %}" class="text-blue-500 hover:underline"
+              >News</a
+            >
+            <a
+              href="{% url 'about' %}"
+              class="text-blue-500 hover:underline ml-4"
+              >About</a
+            >
+          </div>
+        </div>
+      </nav>
+
+      {% endblock nav %}
+
+      <main class="container mx-auto py-4">
+        {% block content %}{% endblock content %}
+      </main>
+    </div>
+
+    {% block footer %}
+    <footer class="bg-white text-center p-4 mt-8 border-t">
+      &copy; {{ year|default:"2025" }} RiffMates. All rights reserved.
+    </footer>
+    {% endblock footer %}
+  </body>
+</html>

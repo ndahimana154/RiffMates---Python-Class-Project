@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}News | RiffMates{% endblock %}
+
+{% block content %}
+  <h1 class="text-3xl font-extrabold mb-6 text-blue-800">📰 Latest News</h1>
+  <div class="bg-white p-6 rounded shadow-md">
+    <ul class="list-disc pl-6 space-y-2">
+      {% for item in news %}
+        <li class="text-gray-800 text-lg">{{ item }}</li>
+      {% empty %}
+        <li class="text-gray-500 italic">No news available at the moment.</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endblock %}
