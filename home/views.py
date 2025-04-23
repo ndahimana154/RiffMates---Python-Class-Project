@@ -1,7 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 
-# View for credits (text/plain response)
+
+def homepage(request):
+    return render(request,'home.html')
+
 def credits(request):
     content = "Nick\nNdahimana"
     return HttpResponse(content, content_type="text/plain")

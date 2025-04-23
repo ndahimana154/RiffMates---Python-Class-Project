@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ musician.first_name }} {{ musician.last_name }} | RiffMates{% endblock %}
+
+{% block content %}
+<div class="welcome-section">
+    <div>
+      <h1 class="display-4 fw-bold">🎸 Welcome to Riffmates News</h1>
+      <p class="lead mt-3">
+        Dive into the rhythm of real stories, breaking updates, and music that
+        speaks. This is where riffs meet reality.
+      </p>
+      <a href="{% url 'news' %}" class="btn btn-outline-light btn-lg mt-4">
+        Start Reading
+      </a>
+    </div>
+  </div>
+  <style>
+    .welcome-section {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1f1f1f, #3c3c3c);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+    }
+  </style>
+{% endblock %}

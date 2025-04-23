@@ -21,9 +21,10 @@ from band import views as bandViews
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path("",home_views.homepage, name="home"),
     path('credits/', home_views.credits),
     path('about/', home_views.about,name="about"),
     path('news/', home_views.news, name='news'),
-    path("bands/",bandViews.viewAllBands, name="bands"),
+    path("musicians/",bandViews.viewAllBands, name="bands"),
      path('musician/<int:id>/', bandViews.viewMusicianDetails, name='musician_detail'),
 ]

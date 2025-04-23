@@ -5,59 +5,53 @@
 
 {% block content %}
 <div class="container mt-5">
-    <div class="artist-profile-card card border-0 shadow-lg overflow-hidden">
-        <div class="card-header position-relative">
-            <div class="header-gradient"></div>
-            <div class="position-relative z-index-1 text-center py-5">
-                <h1 class="display-4 text-white mb-3 fw-bold">
-                    {{ musician.first_name }} <span class="text-warning">{{ musician.last_name }}</span>
-                </h1>
-                <div class="birth-date-badge bg-warning text-dark d-inline-block px-4 py-2 rounded-pill">
-                    <i class="bi bi-balloon me-2"></i>
-                    Born {{ musician.birth|date:"F j, Y" }}
-                </div>
+    <div class="card shadow-lg border-0">
+        <!-- Header Section -->
+        <div class="bg-dark text-white text-center py-5 position-relative">
+            <h1 class="display-4 fw-bold mb-3">
+                {{ musician.first_name }} <span class="text-success">{{ musician.last_name }}</span>
+            </h1>
+            <div class="badge rounded-pill bg-success text-dark px-3 py-2 shadow-sm">
+                <i class="bi bi-balloon me-2"></i>
+                Born {{ musician.birth|date:"F j, Y" }}
             </div>
         </div>
 
+        <!-- Main Body -->
         <div class="card-body">
             <div class="row g-5">
-                <!-- Main Content -->
+                <!-- Left Column -->
                 <div class="col-lg-8">
-                    <div class="age-display mb-5">
-                        <div class="d-inline-block px-4 py-2 bg-dark text-white rounded">
+                    <div class="mb-4">
+                        <div class="bg-dark text-white d-inline-block px-4 py-2 rounded shadow-sm">
                             <i class="bi bi-clock-history me-2"></i>
                             {{ musician.first_name }} is {{ musician.birth|timesince }} old
                         </div>
                     </div>
 
-                    <div class="biography-section">
-                        <h3 class="mb-4 border-bottom pb-2">
-                            <i class="bi bi-journal-text me-2"></i>
-                            Biography
-                        </h3>
-                        <div class="bio-content lead">
-                            <p class="fst-italic text-muted">
-                                "{{ musician.bio|default:"A talented musician whose story is yet to be written..." }}"
-                            </p>
-                        </div>
-                    </div>
+                    <h3 class="mb-3 border-bottom pb-2">
+                        <i class="bi bi-journal-text me-2 text-primary"></i>
+                        Biography
+                    </h3>
+                    <p class="fst-italic text-muted lead">
+                        "{{ musician.bio|default:"A talented musician whose story is yet to be written..." }}"
+                    </p>
                 </div>
 
-                <!-- Sidebar -->
-                <div class="col-lg-4">
-                    <div class="artist-portrait text-center mb-4">
-                        <div class="portrait-frame position-relative">
-                            <div class="gradient-overlay"></div>
-                            <i class="bi bi-person-gear text-light" style="font-size: 12rem"></i>
+                <!-- Right Column (Sidebar) -->
+                <div class="col-lg-4 text-center">
+                    <div class="mb-4">
+                        <div class="rounded-circle bg-light d-flex justify-content-center align-items-center mx-auto" style="width: 200px; height: 200px;">
+                            <i class="bi bi-person-gear text-secondary" style="font-size: 6rem;"></i>
                         </div>
                     </div>
 
-                    <div class="cta-section text-center">
-                        <a href="{% url 'bands' %}" class="btn btn-lg btn-outline-dark w-100 py-3 mb-3">
+                    <div class="d-grid gap-3">
+                        <a href="{% url 'bands' %}" class="btn btn-outline-dark btn-lg py-2">
                             <i class="bi bi-people me-2"></i>
                             View All Bands
                         </a>
-                        <a href="#" class="btn btn-lg btn-warning w-100 py-3">
+                        <a href="#" class="btn btn-success btn-lg py-2">
                             <i class="bi bi-mic me-2"></i>
                             View Performances
                         </a>
@@ -67,65 +61,4 @@
         </div>
     </div>
 </div>
-
-<style>
-    .header-gradient {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
-    }
-
-    .birth-date-badge {
-        box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
-        transition: transform 0.3s ease;
-    }
-
-    .birth-date-badge:hover {
-        transform: translateY(-3px);
-    }
-
-    .artist-portrait .portrait-frame {
-        background: #f8f9fa;
-        border-radius: 50%;
-        padding: 20px;
-        display: inline-block;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .gradient-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(45deg, transparent 0%, rgba(52, 152, 219, 0.1) 100%);
-        border-radius: 50%;
-    }
-
-    .age-display {
-        font-size: 1.2rem;
-        letter-spacing: -0.5px;
-    }
-
-    .biography-section {
-        background: #f8f9fa;
-        border-radius: 15px;
-        padding: 2rem;
-        box-shadow: inset 0 0 15px rgba(0,0,0,0.05);
-    }
-
-    .cta-section .btn {
-        transition: all 0.3s ease;
-        border-width: 2px;
-    }
-
-    .cta-section .btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    }
-</style>
 {% endblock %}
