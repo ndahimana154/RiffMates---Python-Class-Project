@@ -17,10 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from home import views as home_views
+from band import views as bandViews
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('credits/', home_views.credits),
     path('about/', home_views.about,name="about"),
     path('news/', home_views.news, name='news'),
+    path("bands/",bandViews.viewAllBands, name="bands"),
+     path('musician/<int:id>/', bandViews.viewMusicianDetails, name='musician_detail'),
 ]
