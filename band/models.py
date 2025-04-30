@@ -7,6 +7,25 @@ class Musician(models.Model):
     def __str__(self):
         return f"Musician={self.id}, first_name={self.first_name}, last_name={self.last_name}, birth={self.birth}"
     
+class Venue(models.Model):
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return f"id={self.id}, name={self.name}"
+
+class Room(models.Model):
+    name = models.CharField(max_length=50)
+    venue = models.ForeignKey(Venue, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Room={self.id}, name={self.name}, venue={self.venue}"
+
+class Band(models.Model):
+    name = models.CharField(max_length=50)
+    musicians = models.ManyToManyField(Musician)
+
+    def __str__(self):
+        return f"Band={self.id}, name={self.name}"
 
 # Musicians
 # ● Bands

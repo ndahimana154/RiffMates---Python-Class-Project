@@ -1,0 +1,51 @@
+<!-- templates/band_detail.html -->
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ band.name }} | RiffMates{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg border-0">
+        <div class="bg-dark text-white text-center py-5">
+            <h1 class="display-4 fw-bold mb-3">
+                {{ band.name }}
+            </h1>
+        </div>
+
+        <div class="card-body">
+            <h3 class="mb-4">
+                <i class="bi bi-people-fill me-2"></i>
+                Band Members
+            </h3>
+            
+            <div class="row g-3">
+                {% for musician in band.musicians.all %}
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                {{ musician.first_name }} {{ musician.last_name }}
+                            </h5>
+                            <p class="card-text text-muted">
+                                Born {{ musician.birth|date:"F j, Y" }}
+                            </p>
+                            <a href="{% url 'musician_detail' musician.id %}" class="btn btn-sm btn-outline-primary">
+                                View Profile
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        This band currently has no members.
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

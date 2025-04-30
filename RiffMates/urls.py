@@ -25,6 +25,9 @@ urlpatterns = [
     path('credits/', home_views.credits),
     path('about/', home_views.about,name="about"),
     path('news/', home_views.news, name='news'),
-    path("musicians/",bandViews.viewAllBands, name="bands"),
-     path('musician/<int:id>/', bandViews.viewMusicianDetails, name='musician_detail'),
+    path("musicians/",bandViews.viewAllBands, name="musician_list"),
+    path('musician/<int:id>/', bandViews.viewMusicianDetails, name='musician_detail'),
+    path('bands/', bandViews.band_list, name='band_list'),
+    path('band/<int:id>/', bandViews.band_detail, name='band_detail'),
+    path('venues/', bandViews.venue_list, name='venue_list'),
 ]
