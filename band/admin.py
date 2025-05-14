@@ -1,8 +1,10 @@
 from django.contrib import admin
-from band.models import Musician, Band, Venue, Room  
+from band.models import Musician, Band, Venue, Room  ,UserProfile
 from datetime import datetime
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.models import User
 
 class DecadeListFilter(admin.SimpleListFilter):
     title = 'Decade'
@@ -74,3 +76,16 @@ class RoomAdmin(admin.ModelAdmin):
             return mark_safe(f'<a href="/admin/band/venue/{obj.venue.id}/">{obj.venue.name}</a>')
         return format_html("<span style='color: red;'>No venue</span>")
     show_venue.short_description = 'Venue'
+
+
+
+# 定义一个UserProfileInline类，继承自admin.StackedInline
+class UserProfileInline(admin.StackedInline):
+    model = UserProfile
+    can_delete = False
+    
+class UserAdmin(BaseUserAdmin):
+    inlines = (UserProfileInline, )
+
+admin.site.unregister(User)
+admin.site.register(User, UserAdmin)

@@ -1,7 +1,7 @@
 from django.shortcuts import render,get_object_or_404
 from .models import Musician 
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-
+from django.contrib.auth.decorators import login_required
 
 def viewAllBands(request):
     musicians_list = Musician.objects.all()
@@ -94,3 +94,11 @@ def band_detail(request, id):
 def venue_list(request):
     venues = Venue.objects.prefetch_related('room_set').all()
     return render(request, 'venue_list.html', {'venues': venues})
+
+@login_required
+def restricted_page(request):
+    data={
+        'title': 'Restricted Page',
+        'content': "This is a restricted page. You must be logged in to view this page."
+    }
+    return render(request, 'general.html', data)

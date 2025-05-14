@@ -1,0 +1,9 @@
+{% extends "base.html" %}  <!-- Fix: Added % -->
+
+{% block title %}  <!-- Fix: Added % -->
+  {{ block.super }} - {{ title }}  <!-- Added spaces for readability -->
+{% endblock title %}  <!-- Fix: Added % -->
+
+{% block content %}  <!-- Fix: Added % -->
+  {{ content|safe }}
+{% endblock content %} 
