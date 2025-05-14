@@ -16,4 +16,5 @@ urlpatterns = [
     path('band/<int:id>/', bandViews.band_detail, name='band_detail'),
     path('venues/', bandViews.venue_list, name='venue_list'),
     path('restricted_page/',bandViews.restricted_page, name='restricted_page'),
+    path('musician_restricted/<int:musician_id>/',bandViews.musician_restricted, name="restricted_musician"),
 ]

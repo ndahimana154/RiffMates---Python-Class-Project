@@ -30,8 +30,8 @@ class Band(models.Model):
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    musician_profiles = models.ManyToManyField(Musician)
-
+    musician_profiles = models.ManyToManyField(Musician, blank=True)
+    venue_controlled = models.ManyToManyField(Venue, blank=True)
 
 
 # Musicians

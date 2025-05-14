@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Musician{% endblock title %}
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <h1>Firstname: {{ musician.first_name }}</h1>
+      <h2>Lastname: {{ musician.last_name }}</h2>
+      <h3>Birthdate: {{ musician.birth }}</h3>
+    </div>
+  </div>
+</div>
+{% endblock content %}  

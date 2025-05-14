@@ -2,7 +2,7 @@ from django.shortcuts import render,get_object_or_404
 from .models import Musician 
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.contrib.auth.decorators import login_required
-
+from django.http import Http404
 def viewAllBands(request):
     musicians_list = Musician.objects.all()
     paginator = Paginator(musicians_list, 10) 
@@ -102,3 +102,26 @@ def restricted_page(request):
         'content': "This is a restricted page. You must be logged in to view this page."
     }
     return render(request, 'general.html', data)
+
+
+@login_required
+def musician_restricted(request, musician_id):
+    musician = get_object_or_404(Musician, id=musician_id)
+    profile = request.user.userprofile
+    allowed = False
+
+    if profile.musician_profiles.filter(id=musician.id).exists():
+        allowed = True
+    else:
+        musician_profiles = set(profile.musician_profiles.all())
+        for band in musician.band_set.all():
+            band_musicians = set(band.musicians.all())
+            if musician_profiles.intersection(band_musicians):
+                allowed = True
+                break
+
+    if allowed:
+        return render(request, "musician_restricted.html", {"musician": musician})
+    else:
+        # Deny access with a 404 error
+        raise Http404("Permission denied")
