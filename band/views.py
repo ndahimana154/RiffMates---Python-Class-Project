@@ -2,7 +2,8 @@ from django.shortcuts import render,get_object_or_404
 from .models import Musician 
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.contrib.auth.decorators import login_required
-from django.http import Http404
+from django.http import Http404,HttpResponse
+
 def viewAllBands(request):
     musicians_list = Musician.objects.all()
     paginator = Paginator(musicians_list, 10) 
@@ -107,7 +108,9 @@ def restricted_page(request):
 @login_required
 def musician_restricted(request, musician_id):
     musician = get_object_or_404(Musician, id=musician_id)
-    profile = request.user.userprofile
+    profile = getattr(request.user, 'userprofile', None)
+    if not profile:
+     return render(request, "profile/profile_not_found.html")
     allowed = False
 
     if profile.musician_profiles.filter(id=musician.id).exists():
