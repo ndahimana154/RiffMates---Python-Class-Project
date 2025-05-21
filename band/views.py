@@ -127,4 +127,6 @@ def musician_restricted(request, musician_id):
         return render(request, "musician_restricted.html", {"musician": musician})
     else:
         # Deny access with a 404 error
-        raise Http404("Permission denied")
+        # raise Http404("Permission denied")
+        return render(request, "profile/profile_not_found.html")
+    
