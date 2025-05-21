@@ -9,5 +9,5 @@ urlpatterns = [
     path('credits/', home_views.credits, name="credits"),
     path('about/', home_views.about, name="about"),
     path('news/', home_views.news, name='news'),
-    path('band/', include('band.urls')),  # Nested URLs for band app
+    path('band/', include('band.urls')), 
 ]

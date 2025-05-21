@@ -1,8 +1,10 @@
 from django.shortcuts import render,get_object_or_404
-from .models import Musician 
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.contrib.auth.decorators import login_required
-from django.http import Http404,HttpResponse
+from band.models import Musician,UserProfile
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.contrib.auth.models import User
 
 def viewAllBands(request):
     musicians_list = Musician.objects.all()
@@ -126,7 +128,14 @@ def musician_restricted(request, musician_id):
     if allowed:
         return render(request, "musician_restricted.html", {"musician": musician})
     else:
-        # Deny access with a 404 error
-        # raise Http404("Permission denied")
         return render(request, "profile/profile_not_found.html")
     
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender,**kwargs):
+    if kwargs['created'] and not kwargs['raw']:
+        user = kwargs['instance']
+        try:
+            UserProfile.objects.get(user=user)
+        except UserProfile.DoesNotExist:
+            UserProfile.objects.create(user=user)
