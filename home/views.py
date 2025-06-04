@@ -25,3 +25,6 @@ def news(request):
         ]
     }
     return render(request, 'news.html', data)
+
+def home(request):
+    return render(request, 'home.html')

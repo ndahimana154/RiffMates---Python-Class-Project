@@ -1,31 +1,23 @@
-{% extends "base.html" %}
-{% load static %}
+{% extends "base.html" %} {% load static %} {%block content %}
 
-{% block title %}{{ musician.first_name }} {{ musician.last_name }} | RiffMates{% endblock %}
+<img src="{% static 'img/logo.png' %}" style="width: 60px;" alt="Logo Image" />
+<h1>Welcome to My Website</h1>
 
-{% block content %}
-<div class="welcome-section">
-    <div>
-      <h1 class="display-4 fw-bold">🎸 Welcome to Riffmates News</h1>
-      <p class="lead mt-3">
-        Dive into the rhythm of real stories, breaking updates, and music that
-        speaks. This is where riffs meet reality.
-      </p>
-      <a href="{% url 'news' %}" class="btn btn-outline-light btn-lg mt-4">
-        Start Reading
-      </a>
-    </div>
-  </div>
-  <style>
-    .welcome-section {
-      min-height: 100vh;
-      background: linear-gradient(135deg, #1f1f1f, #3c3c3c);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 2rem;
-    }
-  </style>
-{% endblock %}
+<ul>
+  <li>
+    <a href="{% url 'news' %}"> News </a>
+  </li>
+  <li>
+    <a href="{% url 'musician_list' %}"> Musicians </a>
+  </li>
+  <li>
+    <a href="{% url 'band_list' %}"> Bands </a>
+  </li>
+  <li>
+    <a href="{% url 'list_ads' %}"> Ads list</a>
+  </li>
+  <li>
+    <a href="{% url 'seeking_ad' %}"> New ad </a>
+  </li>
+</ul>
+{% endblock content %}
