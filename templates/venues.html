@@ -2,13 +2,19 @@
 {% block title %}{{ block.super }}: Venue listing{% endblock %}
 {% block content %}
 <h1>Venue listing</h1>
-
+   <a href="{% url 'edit_venue2' 0   %}" class="btn btn-success">
+      <i class="bi bi-plus-circle me-1"></i> Add Venue
+    </a>
 <ul>
   {% for venue in venues %}
   <li>
     <b>{{ venue.name }}</b>
-    {% if venue.venue_controlled %}
+    {% if venue.controlled %}
       <br/>&nbsp;&nbsp;<a href="{% url 'edit_venue2' venue.id %}">Edit venue</a><br/>
+    {% endif %}
+    
+    {% if venue.controlled %}
+      <br/>&nbsp;&nbsp;<a href="{% url 'delete_venue' venue.id %}">Delete venue</a><br/>
     {% endif %}
     
     {% if venue.picture %}

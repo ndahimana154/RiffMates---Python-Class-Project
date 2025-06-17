@@ -6,9 +6,9 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
 from .models import Musician, Band, Venue
-from band.forms import VenueForm
+from band.forms import VenueForm,MusicianForm
 from django.http import Http404
-
+from django.http import JsonResponse
 
 def viewAllBands(request):
     musicians_list = Musician.objects.all()
@@ -26,12 +26,43 @@ def viewAllBands(request):
     return render(request, 'all_bands.html', context)
 
 def viewMusicianDetails(request, id):
-
     musician = get_object_or_404(Musician, id=id)
+    form = MusicianForm(instance=musician)
+    
+    # Check if user can edit
+    can_edit = False
+    if request.user.is_authenticated:
+        profile = getattr(request.user, 'userprofile', None)
+        if profile and profile.musician_profiles.filter(id=id).exists():
+            can_edit = True
+    
     context = {
-        'musician': musician
+        'musician': musician,
+        'form': form,
+        'can_edit': can_edit,
     }
     return render(request, 'musician_detail.html', context)
+
+@login_required
+def update_musician(request, musician_id):
+    musician = get_object_or_404(Musician, id=musician_id)
+    profile = getattr(request.user, 'userprofile', None)
+    
+    if not profile or not profile.musician_profiles.filter(id=musician_id).exists():
+        raise Http404("You don't have permission to edit this musician.")
+
+    if request.method == 'POST':
+        form = MusicianForm(request.POST, request.FILES, instance=musician)
+        if form.is_valid():
+            form.save()
+            return redirect('musician_detail', id=musician.id)
+    else:
+        form = MusicianForm(instance=musician)
+
+    return render(request, 'edit_musician.html', {
+        'form': form,
+        'musician': musician,
+    })
 
 def musician_list(request):
     per_page = request.GET.get('per_page', 10)
@@ -137,37 +168,48 @@ def create_user_profile(sender,**kwargs):
 
 @login_required
 def edit_venue(request, venue_id=0):
-    # print(f"Controlled venues: {profile.venues_controlled.all()}")
+    # Get profile (FIXED tuple unpacking)
+    profile, created = UserProfile.objects.get_or_create(user=request.user)
 
     if venue_id != 0:
         venue = get_object_or_404(Venue, id=venue_id)
-        profile, created = UserProfile.objects.get_or_create(user=request.user)
         if not profile.venue_controlled.filter(id=venue_id).exists():
             raise Http404("Can only edit controlled venues")
 
     if request.method == "GET":
-        if venue_id == 0:
-            form = VenueForm()
-        else:
-            form = VenueForm(instance=venue)
+        form = VenueForm(instance=venue if venue_id != 0 else None)
     else:
-        if venue_id ==0:
-            venue = Venue.objects.create()
+        # Use existing venue or create new
+        venue = Venue.objects.get(id=venue_id) if venue_id != 0 else Venue()
         
         form = VenueForm(request.POST, request.FILES, instance=venue)
 
         if form.is_valid():
             venue = form.save()
-
-            profile.venue_controlled.add(venue)
-            return redirect("venues")
+            
+            # Add to controlled venues only for NEW venues
+            if venue_id == 0:
+                profile.venue_controlled.add(venue)
+                
+            return redirect("venue_list2")  # Ensure this name matches urls.py
         
-    data = {
-        'form': form,
-    }
+    return render(request, 'edit_venue.html', {'form': form})
 
-    return render(request, 'edit_venue.html')
+from django.views.decorators.http import require_POST
 
+@login_required
+def delete_venue(request, venue_id):
+    venue = get_object_or_404(Venue, id=venue_id)
+    profile = getattr(request.user, 'userprofile', None)
+    
+    if not profile or not profile.venue_controlled.filter(id=venue_id).exists():
+        raise Http404("You don't have permission to delete this venue")
+    
+    if request.method == 'POST':
+        venue.delete()
+        return redirect('venue_list2')  # Make sure 'venues' is defined in urls.py
+    
+    return render(request, 'confirm_delete_venue.html', {'venue': venue})
 
 def _get_items_per_page(request):
     try:
@@ -187,10 +229,13 @@ def _get_page_num(request, paginator):
     except ValueError:
         page_num = 1
 
+    # 如果页码小于1，则将页码设置为1
     if page_num < 1:
         page_num = 1
+    # 如果页码大于总页数，则将页码设置为总页数
     elif page_num > paginator.num_pages:
         page_num = paginator.num_pages
+    # 返回页码
     return page_num
 
 def venues(request):
@@ -213,3 +258,18 @@ def venues(request):
         'page': page,
     }
     return render(request, 'venues.html', context)
+
+@login_required
+def create_musician(request):
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
+
+    if request.method == 'POST':
+        form = MusicianForm(request.POST, request.FILES)
+        if form.is_valid():
+            musician = form.save()
+            profile.musician_profiles.add(musician)
+            return redirect('musician_detail', id=musician.id)
+    else:
+        form = MusicianForm()
+
+    return render(request, 'create_musician.html', {'form': form})

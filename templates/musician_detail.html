@@ -34,8 +34,13 @@
                         Biography
                     </h3>
                     <p class="fst-italic text-muted lead">
-                        "{{ musician.bio|default:"A talented musician whose story is yet to be written..." }}"
+                        "{{ musician.description|default:"A talented musician whose story is yet to be written..." }}"
                     </p>
+                    {%if musician.bio_pic%}
+                    <p>
+                        <img src="{{musician.bio_pic.url}}" width="200px"/>
+                    </p>
+                    {%endif%}
                 </div>
 
                 <!-- Right Column (Sidebar) -->
@@ -47,14 +52,18 @@
                     </div>
 
                     <div class="d-grid gap-3">
-                        <a href="{% url 'band_list' %}" class="btn btn-outline-dark btn-lg py-2">
+                        <!-- <a href="{% url 'band_list' %}" class="btn btn-outline-dark btn-lg py-2">
                             <i class="bi bi-people me-2"></i>
                             View All Bands
-                        </a>
-                        <a href="#" class="btn btn-success btn-lg py-2">
-                            <i class="bi bi-mic me-2"></i>
-                            View Performances
-                        </a>
+                        </a> -->
+            {% if user.is_authenticated and musician in user.userprofile.musician_profiles.all %}
+    <a href="{% url 'update_musician' musician.id %}" class="btn btn-success btn-lg py-2">
+        <i class="bi bi-mic me-2"></i>
+        Edit musician
+    </a>
+{% endif %}
+
+
                     </div>
                 </div>
             </div>

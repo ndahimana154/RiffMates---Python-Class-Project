@@ -22,5 +22,15 @@
   <li>
     <a href="{% url 'venue_list2' %}">Venues</a>
   </li>
+  <li>
+     <a href="{% url 'edit_venue2' 0   %}" class="btn btn-success">
+      <i class="bi bi-plus-circle me-1"></i> Add Venue
+    </a>
+  </li>
+  <li>
+     <a href="{% url 'create_musician' %}" class="btn btn-success">
+      <i class="bi bi-plus-circle me-1"></i>New musician
+    </a>
+  </li>
 </ul>
 {% endblock content %}

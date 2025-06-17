@@ -1,38 +1,44 @@
-{% extends "base.html" %} 
-{% block title %}Ads List{% endblock %} 
+{% extends "base.html" %}
 
-{% block content %} 
-  {% if request.user.is_authenticated  %}
-    <a href="{% url 'seeking_ad' %}">Create a new ad</a>
+{% block title %}Ads List{% endblock %}
+
+{% block content %}
+  {% if request.user.is_authenticated %}
+    <a href="{% url 'seeking_ad' %}" class="btn btn-primary mb-3">Create a new ad</a>
   {% endif %}
 
-  <h1>Musicians seeking bands</h1>
+  <h1>Musicians Seeking Bands</h1>
   {% if seeking_bands %}
     {% for ad in seeking_bands %}
-      <p>
-        {{ ad.date|default:"N/A" }} &mdash; 
-        {{ ad.musician.first_name|default:"Unknown" }} 
-        {{ ad.musician.last_name|default:"" }}: {{ ad.content|default:"" }}
-     {% if ad.owner == request.user %}
-        <a href="{% url 'edit_seeking_ad' ad.id %}">Edit</a>
-      {% endif %}
-      </p>
-    {% endfor %} 
+      <div class="mb-3">
+        <strong>{{ ad.date|default:"N/A" }}</strong> &mdash;
+        <span>{{ ad.musician.first_name|default:"Unknown" }} {{ ad.musician.last_name|default:"" }}</span>:
+        <span>{{ ad.content|default:"No content provided." }}</span>
+        
+        {% if ad.owner == request.user %}
+          <a href="{% url 'edit_seeking_ad' ad.id %}" class="btn btn-sm btn-outline-secondary ms-2">Edit</a>
+        {% endif %}
+      </div>
+    {% endfor %}
   {% else %}
     <p>No musicians seeking bands at the moment.</p>
   {% endif %}
 
-  <h1>Bands seeking musicians</h1>
+  <hr>
+
+  <h1>Bands Seeking Musicians</h1>
   {% if seeking_musician %}
     {% for ad in seeking_musician %}
-      <p>
-        {{ ad.date|default:"N/A" }} &mdash; 
-        {{ ad.band.name|default:"Unknown" }} : {{ ad.content|default:"" }}
-       {% if ad.owner == request.user %}
-        <a href="{% url 'edit_seeking_ad' ad.id %}">Edit</a>
-      {% endif %}
-      </p>
-    {% endfor %} 
+      <div class="mb-3">
+        <strong>{{ ad.date|default:"N/A" }}</strong> &mdash;
+        <span>{{ ad.band.name|default:"Unknown Band" }}</span>:
+        <span>{{ ad.content|default:"No content provided." }}</span>
+        
+        {% if ad.owner == request.user %}
+          <a href="{% url 'edit_seeking_ad' ad.id %}" class="btn btn-sm btn-outline-secondary ms-2">Edit</a>
+        {% endif %}
+      </div>
+    {% endfor %}
   {% else %}
     <p>No bands seeking musicians at the moment.</p>
   {% endif %}

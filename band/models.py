@@ -4,11 +4,18 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 class Musician(models.Model):
-    first_name=models.CharField(max_length=50)
-    last_name=models.CharField(max_length=50)
-    birth=models.DateField()
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    description = models.TextField(blank=True)  # Changed to TextField
+    bio_pic = models.ImageField(upload_to='musicians/', blank=True, null=True)  # Added upload_to
+    birth = models.DateField()
+    
     def __str__(self):
-        return f"Musician={self.id}, first_name={self.first_name}, last_name={self.last_name}, birth={self.birth}"
+        return f"{self.first_name} {self.last_name}"
+    
+    def age(self):
+        today = date.today()
+        return today.year - self.birth.year - ((today.month, today.day) < (self.birth.month, self.birth.day))
     
 class Venue(models.Model):
     name = models.CharField(max_length=50)
