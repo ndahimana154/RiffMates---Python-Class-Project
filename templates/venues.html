@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}{{ block.super }}: Venue listing{% endblock %}
+{% block content %}
+<h1>Venue listing</h1>
+
+<ul>
+  {% for venue in venues %}
+  <li>
+    <b>{{ venue.name }}</b>
+    {% if venue.venue_controlled %}
+      <br/>&nbsp;&nbsp;<a href="{% url 'edit_venue2' venue.id %}">Edit venue</a><br/>
+    {% endif %}
+    
+    {% if venue.picture %}
+      <br/>&nbsp;&nbsp;<img src="{{ venue.picture.url }}" height="50" /><br/>
+    {% endif %}
+    
+    {% if venue.description %}
+      <br/>&nbsp;&nbsp;<i>&nbsp;{{ venue.description }}</i><br/>
+    {% endif %}
+    
+    Rooms
+    <ul>
+      {% for room in venue.room_set.all %}
+        <li>{{ room.name }}</li>
+      {% empty %}
+        <li><i>No rooms for this venue</i></li>
+      {% endfor %}
+    </ul>
+<a href=""></a>
+  </li>
+  {% empty %}
+  <li><i>No venues in the database</i></li>
+  {% endfor %}
+</ul>
+{% if page.has_other_pages %}
+  {% if page.has_previous %}
+    <a href="?page={{ page.previous_page_number }}&items_per_page={{ page.paginator.per_page }}">Previous</a>
+  {% endif %}
+  <span> Page {{ page.number }} of {{ page.paginator.num_pages }} </span>
+  {% if page.has_next %}
+    <a href="?page={{ page.next_page_number }}&items_per_page={{ page.paginator.per_page }}">Next</a>
+  {% endif %}
+{% endif %}
+
+{% endblock content %}

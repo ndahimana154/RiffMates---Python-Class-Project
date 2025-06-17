@@ -1,10 +1,14 @@
-from django.shortcuts import render,get_object_or_404
+from django.shortcuts import render,get_object_or_404,redirect
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.contrib.auth.decorators import login_required
 from band.models import Musician,UserProfile
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
+from .models import Musician, Band, Venue
+from band.forms import VenueForm
+from django.http import Http404
+
 
 def viewAllBands(request):
     musicians_list = Musician.objects.all()
@@ -29,14 +33,7 @@ def viewMusicianDetails(request, id):
     }
     return render(request, 'musician_detail.html', context)
 
-
-# views.py
-from django.shortcuts import render, get_object_or_404
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from .models import Musician, Band, Venue
-
 def musician_list(request):
-    # Handle per_page parameter
     per_page = request.GET.get('per_page', 10)
     try:
         per_page = int(per_page)
@@ -61,8 +58,6 @@ def musician_list(request):
     }
     return render(request, 'musician_list.html', context)
 
-
-# views.py
 def band_list(request):
     # Handle per_page parameter
     per_page = request.GET.get('per_page', 10)
@@ -93,7 +88,6 @@ def band_detail(request, id):
     band = get_object_or_404(Band, id=id)
     return render(request, 'band_detail.html', {'band': band})
 
-# views.py
 def venue_list(request):
     venues = Venue.objects.prefetch_related('room_set').all()
     return render(request, 'venue_list.html', {'venues': venues})
@@ -139,3 +133,83 @@ def create_user_profile(sender,**kwargs):
             UserProfile.objects.get(user=user)
         except UserProfile.DoesNotExist:
             UserProfile.objects.create(user=user)
+
+
+@login_required
+def edit_venue(request, venue_id=0):
+    # print(f"Controlled venues: {profile.venues_controlled.all()}")
+
+    if venue_id != 0:
+        venue = get_object_or_404(Venue, id=venue_id)
+        profile, created = UserProfile.objects.get_or_create(user=request.user)
+        if not profile.venue_controlled.filter(id=venue_id).exists():
+            raise Http404("Can only edit controlled venues")
+
+    if request.method == "GET":
+        if venue_id == 0:
+            form = VenueForm()
+        else:
+            form = VenueForm(instance=venue)
+    else:
+        if venue_id ==0:
+            venue = Venue.objects.create()
+        
+        form = VenueForm(request.POST, request.FILES, instance=venue)
+
+        if form.is_valid():
+            venue = form.save()
+
+            profile.venue_controlled.add(venue)
+            return redirect("venues")
+        
+    data = {
+        'form': form,
+    }
+
+    return render(request, 'edit_venue.html')
+
+
+def _get_items_per_page(request):
+    try:
+        items_per_page = int(request.GET.get("items_per_page", 10))
+    except ValueError:
+        items_per_page = 10
+
+    if items_per_page < 1:
+        items_per_page = 10
+    elif items_per_page > 50:
+        items_per_page = 50
+    return items_per_page
+
+def _get_page_num(request, paginator):
+    try:
+        page_num = int(request.GET.get("page", 1))
+    except ValueError:
+        page_num = 1
+
+    if page_num < 1:
+        page_num = 1
+    elif page_num > paginator.num_pages:
+        page_num = paginator.num_pages
+    return page_num
+
+def venues(request):
+    all_venues = list(Venue.objects.all().order_by("name"))
+    profile = getattr(request.user, 'userprofile', None)
+
+    for venue in all_venues:
+        if profile:
+            venue.controlled = profile.venue_controlled.filter(id=venue.id).exists()
+        else:
+            venue.controlled = False
+
+    items_per_page = _get_items_per_page(request)
+    paginator = Paginator(all_venues, items_per_page)
+    page_num = _get_page_num(request, paginator)
+    page = paginator.page(page_num)
+
+    context = {
+        'venues': page.object_list,
+        'page': page,
+    }
+    return render(request, 'venues.html', context)

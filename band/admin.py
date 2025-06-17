@@ -1,8 +1,9 @@
 from django.contrib import admin
-from band.models import Musician, Band, Venue, Room  ,UserProfile
+from band.models import Musician, Band, Venue, Room  ,UserProfile,Room
 from datetime import datetime
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
+from django.urls import reverse
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
 
@@ -52,30 +53,30 @@ class BandAdmin(admin.ModelAdmin):
     search_fields = ['name__startswith']
     ordering = ['name']
 
-@admin.register(Venue)
-class VenueAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'show_rooms')
-    search_fields = ['name__startswith']
-    ordering = ['name']  # Default sorting
+# @admin.register(Venue)
+# class VenueAdmin(admin.ModelAdmin):
+#     list_display = ('id', 'name', 'show_rooms')
+#     search_fields = ['name__startswith']
+#     ordering = ['name']  # Default sorting
 
-    def show_rooms(self, obj):
-        rooms = obj.room_set.all()
-        if not rooms:
-            return format_html("<span style='color: red;'>No rooms</span>")
-        return mark_safe(", ".join([f'<a href="/admin/band/room/{r.id}/">{r.name}</a>' for r in rooms]))
-    show_rooms.short_description = 'Rooms'
+#     def show_rooms(self, obj):
+#         rooms = obj.room_set.all()
+#         if not rooms:
+#             return format_html("<span style='color: red;'>No rooms</span>")
+#         return mark_safe(", ".join([f'<a href="/admin/band/room/{r.id}/">{r.name}</a>' for r in rooms]))
+#     show_rooms.short_description = 'Rooms'
 
-@admin.register(Room)
-class RoomAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'show_venue')
-    search_fields = ['name__startswith']
-    ordering = ['name']  # Default sorting
+# @admin.register(Room)
+# class RoomAdmin(admin.ModelAdmin):
+#     list_display = ('id', 'name', 'show_venue')
+#     search_fields = ['name__startswith']
+#     ordering = ['name']  # Default sorting
 
-    def show_venue(self, obj):
-        if obj.venue:
-            return mark_safe(f'<a href="/admin/band/venue/{obj.venue.id}/">{obj.venue.name}</a>')
-        return format_html("<span style='color: red;'>No venue</span>")
-    show_venue.short_description = 'Venue'
+#     def show_venue(self, obj):
+#         if obj.venue:
+#             return mark_safe(f'<a href="/admin/band/venue/{obj.venue.id}/">{obj.venue.name}</a>')
+#         return format_html("<span style='color: red;'>No venue</span>")
+#     show_venue.short_description = 'Venue'
 
 
 
@@ -89,3 +90,33 @@ class UserAdmin(BaseUserAdmin):
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
+
+@admin.register(Venue)
+class VenueAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'show_rooms')
+    search_fields = ("name",)
+
+    def show_rooms(self,obj):
+        rooms = obj.room_set.all()
+        if len(rooms) == 0 :
+            return format_html('<i>no rooms</i>')
+        
+        plural ='s' if len(rooms)>1 else ''
+        param = '?id_in='+','.join(str(room.id) for room in rooms)
+        url = reverse('admin:band_room_changelist') + param
+        return format_html('<a href="{}">{}</a>', url, len(rooms),plural)
+    
+    show_rooms.short_description = 'Rooms'
+
+
+@admin.register(Room)
+class RoomAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'show_venue')
+    search_fields = ("name",)
+
+    def show_venue(self,obj):
+        if obj.venue:
+            return format_html('<a href="/admin/band/venue/{}/">{}</a>',obj.venue.id,obj.venue.name)
+        return format_html('<i>no venue</i>')
+
+    show_venue.short_description = 'Venue'
