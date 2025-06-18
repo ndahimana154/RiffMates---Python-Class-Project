@@ -1,9 +1,33 @@
-{% extends "base.html" %} {% block content %}
-<h1>Venue details</h1>
+{% extends "base.html" %}
 
-<form enctype="multipart/form-data" method="post">
-  {% csrf_token %} {{ form.as_p }}
-  <button type="submit">Save</button>
-</form>
+{% block title %}Venue Details | RiffMates{% endblock %}
 
-{% endblock content %}
+{% block content %}
+<div class="container py-5">
+  <!-- Header -->
+  <div class="text-center mb-4">
+    <h2 class="fw-bold text-primary">
+      <i class="bi bi-building me-2"></i> Venue Details
+    </h2>
+    <p class="text-muted">Add or edit the venue information below.</p>
+  </div>
+
+  <!-- Venue Form -->
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <form method="post" enctype="multipart/form-data" class="p-4 bg-white border rounded shadow-sm">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="d-flex justify-content-between mt-4">
+          <button type="submit" class="btn btn-success">
+            <i class="bi bi-save me-1"></i> Save Venue
+          </button>
+          <a href="{% url 'venue_list2' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-x-circle me-1"></i> Cancel
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -213,7 +213,7 @@ def delete_venue(request, venue_id):
 
 def _get_items_per_page(request):
     try:
-        items_per_page = int(request.GET.get("items_per_page", 10))
+        items_per_page = int(request.GET.get("items_per_page", 21))
     except ValueError:
         items_per_page = 10
 

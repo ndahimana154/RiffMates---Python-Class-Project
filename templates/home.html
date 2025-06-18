@@ -1,36 +1,59 @@
-{% extends "base.html" %} {% load static %} {%block content %}
+{% extends "base.html" %}
+{% load static %}
 
-<img src="{% static 'img/logo.png' %}" style="width: 60px;" alt="Logo Image" />
-<h1>Welcome to My Website</h1>
+{% block content %}
+<div class="container py-5">
 
-<ul>
-  <li>
-    <a href="{% url 'news' %}"> News </a>
-  </li>
-  <li>
-    <a href="{% url 'musician_list' %}"> Musicians </a>
-  </li>
-  <li>
-    <a href="{% url 'band_list' %}"> Bands </a>
-  </li>
-  <li>
-    <a href="{% url 'list_ads' %}"> Ads list</a>
-  </li>
-  <li>
-    <a href="{% url 'seeking_ad' %}"> New ad </a>
-  </li>
-  <li>
-    <a href="{% url 'venue_list2' %}">Venues</a>
-  </li>
-  <li>
-     <a href="{% url 'edit_venue2' 0   %}" class="btn btn-success">
-      <i class="bi bi-plus-circle me-1"></i> Add Venue
-    </a>
-  </li>
-  <li>
-     <a href="{% url 'create_musician' %}" class="btn btn-success">
-      <i class="bi bi-plus-circle me-1"></i>New musician
-    </a>
-  </li>
-</ul>
-{% endblock content %}
+  <!-- Logo and Welcome -->
+  <div class="text-center mb-5">
+    <img src="{% static 'img/logo.png' %}" style="width: 80px;" alt="Logo Image" class="mb-3" />
+    <h1 class="fw-bold text-primary">Welcome to RiffMates</h1>
+    <p class="text-muted">Your hub for musicians, bands, venues, and music ads.</p>
+  </div>
+
+  <!-- Navigation Grid -->
+  <div class="row g-4 justify-content-center">
+    <div class="col-md-4">
+      <a href="{% url 'news' %}" class="btn btn-outline-primary w-100 py-3 shadow-sm">
+        <i class="bi bi-newspaper me-2"></i> News
+      </a>
+    </div>
+    <div class="col-md-4">
+      <a href="{% url 'musician_list' %}" class="btn btn-outline-dark w-100 py-3 shadow-sm">
+        <i class="bi bi-music-note-list me-2"></i> Musicians
+      </a>
+    </div>
+    <div class="col-md-4">
+      <a href="{% url 'band_list' %}" class="btn btn-outline-dark w-100 py-3 shadow-sm">
+        <i class="bi bi-people-fill me-2"></i> Bands
+      </a>
+    </div>
+    <div class="col-md-4">
+      <a href="{% url 'list_ads' %}" class="btn btn-outline-secondary w-100 py-3 shadow-sm">
+        <i class="bi bi-megaphone me-2"></i> Ads List
+      </a>
+    </div>
+    <div class="col-md-4">
+      <a href="{% url 'seeking_ad' %}" class="btn btn-outline-success w-100 py-3 shadow-sm">
+        <i class="bi bi-plus-circle me-2"></i> New Ad
+      </a>
+    </div>
+    <div class="col-md-4">
+      <a href="{% url 'venue_list2' %}" class="btn btn-outline-info w-100 py-3 shadow-sm">
+        <i class="bi bi-geo-alt me-2"></i> Venues
+      </a>
+    </div>
+    <div class="col-md-4">
+      <a href="{% url 'edit_venue2' 0 %}" class="btn btn-outline-success w-100 py-3 shadow-sm">
+        <i class="bi bi-plus-circle me-2"></i> Add Venue
+      </a>
+    </div>
+    <div class="col-md-4">
+      <a href="{% url 'create_musician' %}" class="btn btn-outline-success w-100 py-3 shadow-sm">
+        <i class="bi bi-plus-circle me-2"></i> New Musician
+      </a>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

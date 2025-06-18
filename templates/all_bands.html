@@ -1,22 +1,27 @@
 {% extends "base.html" %} {% load static %} {% block title %}Musicians |
 RiffMates{% endblock %} {% block content %}
-<div class="container mt-5">
+<div class="container mt-4">
   <!-- Header Section -->
   <div
-    class="d-flex justify-content-between align-items-center bg-white p-4 shadow-sm rounded mb-4"
+    class="d-flex justify-content-between align-items-center bg-white p-4 rounded shadow-sm border border-light-subtle mb-4"
   >
-    <h1 class="display-5 text-dark m-0">
-      <i class="bi bi-music-note-beamed me-2"></i>All Musicians
+    <h1 class="display-6 text-dark m-0">
+      <i class="bi bi-music-note-beamed me-2 text-primary"></i> All Musicians
     </h1>
-    <a href="" class="btn btn-success">
-      <i class="bi bi-plus-circle me-1"></i> Add Musician
+    <a
+      href="{% url 'create_musician' %}"
+      class="btn btn-outline-success py-3 shadow-sm"
+    >
+      <i class="bi bi-plus-circle me-2"></i> New Musician
     </a>
   </div>
 
   <!-- Musicians Table -->
   <div class="table-responsive">
-    <table class="table table-hover table-striped shadow-sm align-middle">
-      <thead class="table-dark">
+    <table
+      class="table table-hover align-middle bg-white shadow-sm border rounded"
+    >
+      <thead class="table-light">
         <tr>
           <th scope="col">First Name</th>
           <th scope="col">Last Name</th>
@@ -35,14 +40,14 @@ RiffMates{% endblock %} {% block content %}
               href="{% url 'musician_detail' musician.id %}"
               class="btn btn-sm btn-outline-primary"
             >
-              <i class="bi bi-eye"></i> View details
+              <i class="bi bi-eye"></i> View
             </a>
           </td>
         </tr>
         {% empty %}
         <tr>
           <td colspan="4" class="text-center py-4">
-            <div class="alert alert-warning mb-0">
+            <div class="alert alert-warning bg-opacity-75 border-0">
               <i class="bi bi-exclamation-triangle me-2"></i> No musicians
               found.
             </div>
@@ -56,7 +61,7 @@ RiffMates{% endblock %} {% block content %}
   <!-- Pagination Controls -->
   {% if musicians.paginator.num_pages > 1 %}
   <nav aria-label="Page navigation">
-    <ul class="pagination justify-content-center">
+    <ul class="pagination justify-content-center mt-4">
       {% if musicians.has_previous %}
       <li class="page-item">
         <a
@@ -69,7 +74,7 @@ RiffMates{% endblock %} {% block content %}
       </li>
       {% else %}
       <li class="page-item disabled">
-        <span class="page-link" aria-hidden="true">&laquo;</span>
+        <span class="page-link">&laquo;</span>
       </li>
       {% endif %} {% for num in musicians.paginator.page_range %}
       <li class="page-item {% if num == musicians.number %}active{% endif %}">
@@ -87,7 +92,7 @@ RiffMates{% endblock %} {% block content %}
       </li>
       {% else %}
       <li class="page-item disabled">
-        <span class="page-link" aria-hidden="true">&raquo;</span>
+        <span class="page-link">&raquo;</span>
       </li>
       {% endif %}
     </ul>

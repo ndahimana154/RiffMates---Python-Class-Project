@@ -1,15 +1,33 @@
 {% extends "base.html" %}
 
-{% block title %}Edit {{ musician.first_name }} {{ musician.last_name }}{% endblock %}
+{% block title %}Edit {{ musician.first_name }} {{ musician.last_name }} | RiffMates{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <h2>Edit Musician</h2>
-    <form method="post" enctype="multipart/form-data">
+<div class="container py-5">
+  <!-- Page Header -->
+  <div class="mb-4 text-center">
+    <h2 class="fw-bold text-primary">
+      <i class="bi bi-pencil-square me-2"></i> Edit Musician
+    </h2>
+    <p class="text-muted">Update the details for <strong>{{ musician.first_name }} {{ musician.last_name }}</strong></p>
+  </div>
+
+  <!-- Edit Form -->
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <form method="post" enctype="multipart/form-data" class="p-4 border rounded shadow-sm bg-white">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="btn btn-success">Save</button>
-        <!-- <a href="{% url 'musician_detail' musician.id %}" class="btn btn-secondary">Cancel</a> -->
-    </form>
+        <div class="d-flex justify-content-between mt-4">
+          <button type="submit" class="btn btn-success">
+            <i class="bi bi-save me-1"></i> Save Changes
+          </button>
+          <a href="{% url 'musician_detail' musician.id %}" class="btn btn-outline-secondary">
+            <i class="bi bi-x-circle me-1"></i> Cancel
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
 {% endblock %}
